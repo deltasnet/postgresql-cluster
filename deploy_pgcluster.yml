@@ -111,11 +111,6 @@
   when: not dcs_exists|bool and dcs_type == "etcd"
   tags: etcd
 
-- name: deploy_pgcluster.yml | Deploy Consul
-  ansible.builtin.import_playbook: consul.yml
-  when: dcs_type == "consul"
-  tags: consul
-
 - name: deploy_pgcluster.yml | Postgres Cluster Configuration
   hosts: postgres_cluster
   become: true
@@ -210,13 +205,17 @@
       ansible.builtin.include_vars: "vars/{{ ansible_os_family }}.yml"
       tags: always
 
+    - name: Make sure the /pgsql directory exists
+      ansible.builtin.file:
+        dest: "{{ postgresql_home_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+      tags: always
+        
+    
+
   roles:
-    - role: wal-g
-      when: wal_g_install|bool
-
-    - role: pg_probackup
-      when: pg_probackup_install|bool
-
     - role: cron
 
     - role: pgbouncer
@@ -228,10 +227,6 @@
 
     - role: pgbackrest/stanza-create
       when: pgbackrest_install|bool
-
-    - role: vip-manager
-      when: not with_haproxy_load_balancing|bool and
-        (cluster_vip is defined and cluster_vip | length > 0)
 
     # optional
     - role: postgresql-users

@@ -7,7 +7,7 @@
 [balancers]
 10.0.1.118
 10.0.1.152
-10.0.1.109
+10.0.1.52
 
 # PostgreSQL nodes
 [master]

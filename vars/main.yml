@@ -106,6 +106,7 @@ postgresql_extensions: []
 # postgresql parameters to bootstrap dcs (are parameters for example)
 postgresql_parameters:
   - { option: "max_connections", value: "1000" }
+  - { option: "max_stack_depth", value: "2MB" }
   - { option: "superuser_reserved_connections", value: "5" }
   - { option: "password_encryption", value: "{{ postgresql_password_encryption_algorithm }}" }
   - { option: "max_locks_per_transaction", value: "512" }
@@ -141,7 +142,7 @@ postgresql_parameters:
   - { option: "wal_level", value: "replica" }
   - { option: "wal_keep_size", value: "2GB" }
   - { option: "max_wal_senders", value: "10" }
-  - { option: "max_replication_slots", value: "10" }
+  - { option: "max_replication_slots", value: "20" }
   - { option: "hot_standby", value: "on" }
   - { option: "wal_log_hints", value: "on" }
   - { option: "wal_compression", value: "on" }
@@ -159,27 +160,33 @@ postgresql_parameters:
   - { option: "auto_explain.log_nested_statements", value: "true" }
   - { option: "auto_explain.sample_rate", value: "0.01" }  # enable auto_explain for 1% of queries logging threshold
   - { option: "track_io_timing", value: "on" }
-  - { option: "log_lock_waits", value: "on" }
   - { option: "log_temp_files", value: "0" }
   - { option: "track_activities", value: "on" }
   - { option: "track_activity_query_size", value: "4096" }
   - { option: "track_counts", value: "on" }
   - { option: "track_functions", value: "all" }
-  - { option: "log_checkpoints", value: "on" }
   - { option: "logging_collector", value: "on" }
+  - { option: "log_connections", value: "on" }
+  - { option: "log_disconnections", value: "on" }
+  - { option: "log_lock_waits", value: "on" }
+  - { option: "log_checkpoints", value: "on" }
   - { option: "log_truncate_on_rotation", value: "on" }
   - { option: "log_rotation_age", value: "1d" }
   - { option: "log_rotation_size", value: "0" }
   - { option: "log_line_prefix", value: "'%t [%p-%l] %r %q%u@%d '" }
   - { option: "log_filename", value: "postgresql-%a.log" }
   - { option: "log_directory", value: "{{ postgresql_log_dir }}" }
+  - { option: "log_statement", value: "ddl" }
+  - { option: "log_min_duration_statement", value: "500" }
+  - { option: "log_autovacuum_min_duration", value: "0" }
+  - { option: "log_timezone", value: "Asia/Bahrain" }
   - { option: "hot_standby_feedback", value: "on" }  # allows feedback from a hot standby to the primary that will avoid query conflicts
   - { option: "max_standby_streaming_delay", value: "30s" }
   - { option: "wal_receiver_status_interval", value: "10s" }
   - { option: "idle_in_transaction_session_timeout", value: "10min" }  # reduce this timeout if possible
   - { option: "jit", value: "off" }
   - { option: "max_worker_processes", value: "24" }
-  - { option: "max_parallel_workers", value: "8" }
+  - { option: "max_parallel_workers", value: "15" }
   - { option: "max_parallel_workers_per_gather", value: "2" }
   - { option: "max_parallel_maintenance_workers", value: "2" }
   - { option: "tcp_keepalives_count", value: "10" }
@@ -223,7 +230,7 @@ pgbouncer_install: true  # or 'false' if you do not want to install and configur
 pgbouncer_conf_dir: "/etc/pgbouncer"
 pgbouncer_log_dir: "/var/log/pgbouncer"
 pgbouncer_listen_addr: "0.0.0.0"
-pgbouncer_listen_port: 6432
+pgbouncer_listen_port: 6400
 pgbouncer_max_client_conn: 10000
 pgbouncer_max_db_connections: 1000
 pgbouncer_default_pool_size: 20
@@ -253,13 +260,7 @@ patroni_retry_timeout: 10
 patroni_maximum_lag_on_failover: 1048576
 patroni_master_start_timeout: 300
 
-# https://patroni.readthedocs.io/en/latest/SETTINGS.html?highlight=callbacks#dynamic-configuration-settings
 patroni_callbacks: []
-#  - {action: "on_role_change", script: ""}
-#  - {action: "on_stop", script: ""}
-#  - {action: "on_restart", script: ""}
-#  - {action: "on_reload", script: ""}
-#  - {action: "on_role_change", script: ""}
 
 # https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#standby-cluster
 # Requirements:
@@ -299,10 +300,8 @@ patroni_remove_data_directory_on_diverged_timelines: false  # or 'true'
 # if 'true', Patroni will remove the PostgreSQL data directory and recreate the replica
 # if it notices that timelines are diverging and the former master can not start streaming from the new master.
 
-# https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#bootstrap
 patroni_cluster_bootstrap_method: "initdb"  # or "wal-g", "pgbackrest", "pg_probackup"
 
-# https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#building-replicas
 patroni_create_replica_methods:
   - pgbackrest
   - basebackup
