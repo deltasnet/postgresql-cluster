@@ -1,0 +1,8 @@
+---
+- name: Check etcd health
+  ansible.builtin.uri:
+    url: "http://{{ inventory_hostname }}:2379/health"
+    return_content: true
+  register: etcd_health_status
+  failed_when: "(etcd_health_status.content | from_json).health != 'true'"
+  when: dcs_type == "etcd"
