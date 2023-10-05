@@ -106,16 +106,21 @@ postgresql_extensions: []
 # postgresql parameters to bootstrap dcs (are parameters for example)
 postgresql_parameters:
   - { option: "max_connections", value: "1000" }
+  - { option: "max_replication_slots", value: "20" }
   - { option: "max_stack_depth", value: "2MB" }
+  - { option: "max_worker_processes", value: "24" }
+  - { option: "max_parallel_workers", value: "15" }
   - { option: "superuser_reserved_connections", value: "5" }
   - { option: "password_encryption", value: "{{ postgresql_password_encryption_algorithm }}" }
   - { option: "max_locks_per_transaction", value: "512" }
   - { option: "max_prepared_transactions", value: "0" }
+  - { option: "deadlock_timeout", value: "30s" }
+  - { option: "datestyle", value: "iso, mdy" }
   - { option: "huge_pages", value: "try" }  # or "on" if you set "vm_nr_hugepages" in kernel parameters
   - { option: "shared_buffers", value: "{{ (ansible_memtotal_mb * 0.25) | int }}MB" }  # by default, 25% of RAM
   - { option: "effective_cache_size", value: "{{ (ansible_memtotal_mb * 0.75) | int }}MB" }  # by default, 75% of RAM
-  - { option: "work_mem", value: "128MB" }  # please change this value
-  - { option: "maintenance_work_mem", value: "256MB" }  # please change this value
+  - { option: "work_mem", value: "2GB" }  # please change this value
+  - { option: "maintenance_work_mem", value: "2GB" }  # please change this value
   - { option: "checkpoint_timeout", value: "15min" }
   - { option: "checkpoint_completion_target", value: "0.9" }
   - { option: "min_wal_size", value: "2GB" }
@@ -123,29 +128,24 @@ postgresql_parameters:
   - { option: "wal_buffers", value: "32MB" }
   - { option: "default_statistics_target", value: "1000" }
   - { option: "seq_page_cost", value: "1" }
-  - { option: "random_page_cost", value: "4" }  # "1.1" for SSD storage. Also, if your databases fits in shared_buffers
-  - { option: "effective_io_concurrency", value: "2" }  # "200" for SSD storage
-  - { option: "synchronous_commit", value: "on" }  # or 'off' if you can you lose single transactions in case of a crash
+  - { option: "random_page_cost", value: "1.1" }  # "1.1" for SSD storage. Also, if your databases fits in shared_buffers
+  - { option: "effective_io_concurrency", value: "100" }  # "200" for SSD storage
   - { option: "autovacuum", value: "on" }  # never turn off the autovacuum!
-  - { option: "autovacuum_max_workers", value: "5" }
-  - { option: "autovacuum_vacuum_scale_factor", value: "0.01" }  # or 0.005/0.001
-  - { option: "autovacuum_analyze_scale_factor", value: "0.01" }
-  - { option: "autovacuum_vacuum_cost_limit", value: "500" }  # or 1000/5000
+  - { option: "autovacuum_max_workers", value: "6" }
+  - { option: "autovacuum_vacuum_scale_factor", value: "0.1" }  # or 0.005/0.001
+  - { option: "autovacuum_analyze_scale_factor", value: "0.1" }
   - { option: "autovacuum_vacuum_cost_delay", value: "2" }
-  - { option: "autovacuum_naptime", value: "1s" }
-  - { option: "max_files_per_process", value: "4096" }
+  - { option: "autovacuum_naptime", value: "10s" }
   - { option: "archive_mode", value: "on" }
   - { option: "archive_timeout", value: "1800s" }
   - { option: "archive_command", value: "cd ." }  # not doing anything yet with WAL-s
 #  - { option: "archive_command", value: "{{ wal_g_archive_command }}" }  # archive WAL-s using WAL-G
 #  - { option: "archive_command", value: "{{ pgbackrest_archive_command }}" }  # archive WAL-s using pgbackrest
   - { option: "wal_level", value: "replica" }
-  - { option: "wal_keep_size", value: "2GB" }
-  - { option: "max_wal_senders", value: "10" }
-  - { option: "max_replication_slots", value: "20" }
+  - { option: "wal_keep_size", value: "30GB" }
+  - { option: "max_wal_senders", value: "15" }
   - { option: "hot_standby", value: "on" }
   - { option: "wal_log_hints", value: "on" }
-  - { option: "wal_compression", value: "on" }
   - { option: "shared_preload_libraries", value: "pg_stat_statements,auto_explain" }
   - { option: "pg_stat_statements.max", value: "10000" }
   - { option: "pg_stat_statements.track", value: "all" }
@@ -181,14 +181,9 @@ postgresql_parameters:
   - { option: "log_autovacuum_min_duration", value: "0" }
   - { option: "log_timezone", value: "Asia/Bahrain" }
   - { option: "hot_standby_feedback", value: "on" }  # allows feedback from a hot standby to the primary that will avoid query conflicts
-  - { option: "max_standby_streaming_delay", value: "30s" }
+  - { option: "max_standby_streaming_delay", value: "300s" }
   - { option: "wal_receiver_status_interval", value: "10s" }
   - { option: "idle_in_transaction_session_timeout", value: "10min" }  # reduce this timeout if possible
-  - { option: "jit", value: "off" }
-  - { option: "max_worker_processes", value: "24" }
-  - { option: "max_parallel_workers", value: "15" }
-  - { option: "max_parallel_workers_per_gather", value: "2" }
-  - { option: "max_parallel_maintenance_workers", value: "2" }
   - { option: "tcp_keepalives_count", value: "10" }
   - { option: "tcp_keepalives_idle", value: "300" }
   - { option: "tcp_keepalives_interval", value: "30" }
@@ -231,7 +226,7 @@ pgbouncer_conf_dir: "/etc/pgbouncer"
 pgbouncer_log_dir: "/var/log/pgbouncer"
 pgbouncer_listen_addr: "0.0.0.0"
 pgbouncer_listen_port: 6400
-pgbouncer_max_client_conn: 10000
+pgbouncer_max_client_conn: 2000
 pgbouncer_max_db_connections: 1000
 pgbouncer_default_pool_size: 20
 pgbouncer_query_wait_timeout: 120
