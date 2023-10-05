@@ -1,21 +1,21 @@
 [etcd_cluster]  # recommendation: 3, or 5-7 nodes
-10.0.1.111
-10.0.1.187
-10.0.1.119
+10.0.1.71
+10.0.1.16
+10.0.1.108
 
 # if with_haproxy_load_balancing: true
 [balancers]
-10.0.1.118
-10.0.1.152
-10.0.1.52
+10.0.1.148
+10.0.1.85
+
 
 # PostgreSQL nodes
 [master]
-10.0.1.113 hostname=pgnode01 postgresql_exists=false
+10.0.1.68 hostname=pgnode01 postgresql_exists=false
 
 [replica]
-10.0.1.168 hostname=pgnode02 postgresql_exists=false
-10.0.1.75  hostname=pgnode03 postgresql_exists=false
+10.0.1.99 hostname=pgnode02 postgresql_exists=false
+10.0.1.86  hostname=pgnode03 postgresql_exists=false
 
 [postgres_cluster:children]
 master
@@ -23,7 +23,7 @@ replica
 
 # if pgbackrest_install: true and "repo_host" is set
 [pgbackrest]  # optional (Dedicated Repository Host)
-10.0.1.75
+10.0.1.86
 
 # Connection settings
 [all:vars]
