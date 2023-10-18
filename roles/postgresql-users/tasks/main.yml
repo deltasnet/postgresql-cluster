@@ -48,13 +48,13 @@
     group: postgres  # Optional: Set the group to postgres
     mode: '0644'
 
-- name: Execute the app_user.sql script on the PostgreSQL server
-  community.postgresql.postgresql_script:
-    db: postgres
-    port: "{{ postgresql_port }}"
-    path: /tmp/app_user.sql
-    login_host: localhost
-    login_user: "{{ patroni_superuser_username }}"
-    login_password: "{{ patroni_superuser_password }}"
+# - name: Execute the app_user.sql script on the PostgreSQL server
+#   community.postgresql.postgresql_script:
+#     db: postgres
+#     port: "{{ postgresql_port }}"
+#     path: /tmp/app_user.sql
+#     login_host: localhost
+#     login_user: "{{ patroni_superuser_username }}"
+#     login_password: "{{ patroni_superuser_password }}"
 
 ...
