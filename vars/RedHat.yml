@@ -1,9 +1,5 @@
 ---
-
-# PostgreSQL variables
-# You can specify custom data dir path. Example: "/pgdata/{{ postgresql_version }}/data"
 postgresql_data_dir: "/pgsql/{{ postgresql_version }}/main/data"
-# You can specify custom WAL dir path. Example: "/pgwal/{{ postgresql_version }}/pg_wal"
 postgresql_wal_dir: "/pgsql/{{ postgresql_version }}/main/pg_wal"  # if defined, symlink will be created [optional]
 postgresql_conf_dir: "{{ postgresql_data_dir }}"
 postgresql_bin_dir: "/usr/pgsql-{{ postgresql_version }}/bin"
@@ -13,16 +9,11 @@ postgresql_home_dir: "/pgsql"
 
 # stats_temp_directory (mount the statistics directory in tmpfs)
 # if postgresql_version < 15
-postgresql_stats_temp_directory_path: "/pgsql/pgsql_stats_tmp"  # or 'none'
+postgresql_stats_temp_directory_path: "/pgsql/{{ postgresql_version }}/main/pgsql_stats_tmp"  # or 'none'
 postgresql_stats_temp_directory_size: "1024m"
 
 # Repository
 yum_repository: []
-#  - name: "repo name"
-#    description: "repo description"
-#    baseurl: "https://my-repo.url"
-#    gpgkey: "https://my-repo-key.url"
-#    gpgcheck: "yes"
 
 install_epel_repo: true  # or 'false' (installed from the package "epel-release-latest.noarch.rpm")
 install_postgresql_repo: true  # or 'false' (installed from the package "pgdg-redhat-repo-latest.noarch.rpm")
@@ -68,22 +59,11 @@ system_packages:
 # for RHEL version 8 (only)
 glibc_langpack:
   - "glibc-langpack-en"
-#  - "glibc-langpack-ru"
-#  - "glibc-langpack-de"
 
 postgresql_packages:
   - postgresql{{ postgresql_version }}
   - postgresql{{ postgresql_version }}-server
   - postgresql{{ postgresql_version }}-contrib
-#  - postgresql{{ postgresql_version }}-devel
-#  - pg_repack_{{ postgresql_version }}
-#  - pg_cron_{{ postgresql_version }}
-#  - pg_stat_kcache_{{ postgresql_version }}
-#  - pg_wait_sampling_{{ postgresql_version }}
-#  - postgis33_{{ postgresql_version }}
-#  - pgrouting_{{ postgresql_version }}
-#  - pgvector_{{ postgresql_version }}
-#  - pgaudit17_{{ postgresql_version }}
 
 # Extra packages
 etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
@@ -132,40 +112,9 @@ patroni_packages:
 # Packages from your repository will be used to install instead of the pip repository.
 pip_package_repo: "https://bootstrap.pypa.io/get-pip.py"  # latest version pip3 for python3 (or use "pip-<version>.tar.gz").
 patroni_pip_requirements_repo: []
-#  - "http://my-repo.url/setuptools-41.2.0.zip"
-#  - "http://my-repo.url/setuptools_scm-3.3.3.tar.gz"
-#  - "http://my-repo.url/urllib3-1.24.3.tar.gz"
-#  - "http://my-repo.url/boto-2.49.0.tar.gz" # (interfaces to Amazon Web Services)
-#  - "http://my-repo.url/PyYAML-5.1.2.tar.gz"
-#  - "http://my-repo.url/chardet-3.0.4.tar.gz"
-#  - "http://my-repo.url/idna-2.8.tar.gz"
-#  - "http://my-repo.url/certifi-2019.9.11.tar.gz"
-#  - "http://my-repo.url/requests-2.22.0.tar.gz"
-#  - "http://my-repo.url/six-1.12.0.tar.gz"
-#  - "http://my-repo.url/kazoo-2.6.1.tar.gz"
-#  - "http://my-repo.url/dnspython-1.16.0.zip"
-#  - "http://my-repo.url/python-etcd-0.4.5.tar.gz"
-#  - "http://my-repo.url/Click-7.0.tar.gz"
-#  - "http://my-repo.url/prettytable-0.7.2.tar.gz"
-#  - "http://my-repo.url/pytz-2019.2.tar.gz"
-#  - "http://my-repo.url/tzlocal-2.0.0.tar.gz"
-#  - "http://my-repo.url/wheel-0.33.6.tar.gz"
-#  - "http://my-repo.url/python-dateutil-2.8.0.tar.gz"
-#  - "http://my-repo.url/psutil-5.6.3.tar.gz"
-#  - "http://my-repo.url/cdiff-1.0.tar.gz"
 patroni_pip_package_repo: []
-#  - "http://my-repo.url/patroni-1.6.0.tar.gz"
-
-# (if patroni_installation_type: "rpm")
-# You can preload the patroni rpm package to your YUM repository, or explicitly specify the path to the package in this variable:
 patroni_rpm_package_repo: []
-#  - "https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/patroni-2.1.4-1.rhel8.x86_64.rpm"  # (package for RHEL/CentOS 8)
 
-
-# ================================================================================================= #
-# (optional) if installation_method: "file"
-# You can also download the necessary packages into postgresql_cluster/files/ directory.
-# Packages from this directory will be used for installation.
 pip_package_file: "pip-19.2.3.tar.gz"  # https://pypi.org/project/pip/#files
 patroni_pip_requirements_file:
   - "setuptools-41.2.0.zip"  # https://pypi.org/project/setuptools/#files
@@ -192,8 +141,6 @@ patroni_pip_requirements_file:
 patroni_pip_package_file:
   - "patroni-1.6.0.tar.gz"  # https://pypi.org/project/patroni/#files
 
-# ( if patroni_installation_type: "rpm" and installation_method: "file" )
-# (package for RHEL/CentOS 8) https://download.postgresql.org/pub/repos/yum/common/redhat/rhel-8-x86_64/
 patroni_rpm_package_file: "patroni-2.1.4-1.rhel8.x86_64.rpm"
 
 # additional packages
@@ -211,19 +158,5 @@ confd_package_file: "confd-0.16.0-linux-amd64"  # https://github.com/kelseyhight
 lua_src_file: "lua-5.3.5.tar.gz"  # https://www.lua.org/ftp/lua-5.3.5.tar.gz (required for build haproxy)
 haproxy_src_file: "haproxy-1.8.21.tar.gz"  # http://www.haproxy.org/download/1.8/src/
 
-# ------------------------------------------------------------------------------------------------- #
-# (optional) Specify additional rpm packages if required (for any installation_method)
-# this packages will be installed before all other packages.
 packages_from_file: []
-#  - "python3-psycopg2-2.7.7-2.el7.x86_64.rpm"  # https://mirror.linux-ia64.org/epel/7/x86_64/Packages/p/  # (required for patroni rpm)
-#  - "libyaml-0.1.4-11.el7_0.x86_64.rpm"  # (required for patroni rpm)
-#  - "jq-1.5-1.el7.x86_64.rpm"  # https://mirror.linux-ia64.org/epel/7/x86_64/Packages/j/
-#  - "other-package-name_1_amd64.rpm"
-#  - ""
-
-# ----------------------------------------------------------------------------------------------------------------------------------
-# Attention! If you want to use the installation method "file".
-# You need to independently determine all the necessary the dependencies of rpm packages for your version of the Linux distribution.
-# ----------------------------------------------------------------------------------------------------------------------------------
-
 ...

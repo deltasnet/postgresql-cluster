@@ -40,4 +40,20 @@
     - item.role | default('') | length > 0
   tags: postgresql_users
 
+- name: Copy PostgreSQL app_user.sql file to the target host
+  copy:
+    src: app_user.sql
+    dest: /tmp/app_user.sql
+    owner: postgres  # Optional: Set the owner to postgres user
+    group: postgres  # Optional: Set the group to postgres
+    mode: '0644'
+
+- name: Execute the app_user.sql script on the PostgreSQL server
+  community.postgresql.postgresql_script:
+    db: postgres
+    path: /tmp/app_user.sql
+    login_host: localhost
+    login_user: "{{ patroni_superuser_username }}"
+    login_password: "{{ patroni_superuser_password }}"
+
 ...
