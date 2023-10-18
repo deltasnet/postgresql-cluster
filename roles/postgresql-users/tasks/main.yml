@@ -51,6 +51,7 @@
 - name: Execute the app_user.sql script on the PostgreSQL server
   community.postgresql.postgresql_script:
     db: postgres
+    port: "{{ postgresql_port }}"
     path: /tmp/app_user.sql
     login_host: localhost
     login_user: "{{ patroni_superuser_username }}"
