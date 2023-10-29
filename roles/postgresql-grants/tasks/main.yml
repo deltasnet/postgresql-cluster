@@ -1,0 +1,28 @@
+---
+
+- name: Copy PostgreSQL app_user.sql file to the target host
+  template:
+    src: "user_permissions.sql.j2"
+    dest: "/tmp/user_permissions.sql"
+    owner: postgres  # Optional: Set the owner to postgres user
+    group: postgres  # Optional: Set the group to postgres
+    mode: '0644'
+    lstrip_blocks: true
+  tags: postgresql_grants
+
+- name: Execute the user_permissions.sql script on the PostgreSQL server
+  ansible.builtin.shell: |
+    psql -U {{ patroni_superuser_username }} -h localhost -p {{ postgresql_port }} -d postgres -f /tmp/user_permissions.sql
+  environment:
+    PGPASSWORD: "{{ patroni_superuser_password}}"
+  become: yes
+  become_user: postgres
+  with_nested:
+  - "{{ postgresql_databases }}"
+  - "{{ postgresql_users }}"
+  when:
+    - postgresql_users is defined
+    - postgresql_users | length > 0
+    - postgresql_databases | length > 0
+  tags: postgresql_grants
+...

@@ -1,0 +1,22 @@
+{% for user in postgresql_users %}
+{% if user.has_grant %}
+---------------------------------
+-- Permissions for {{ user.name }}
+---------------------------------
+REVOKE CONNECT ON DATABASE template0 FROM {{ user.name }};
+REVOKE CONNECT ON DATABASE template1 FROM {{ user.name }};
+REVOKE CONNECT ON DATABASE postgres FROM {{ user.name }};
+{% for database in postgresql_databases %}
+-- Database: {{ database.db }}
+{% if database.db %}
+GRANT CONNECT ON DATABASE {{ database.db }} TO {{ user.name }};
+\c {{ database.db }}
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO {{ user.name }};
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO {{ user.name }};
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO {{ user.name }};
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO {{ user.name }};
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
