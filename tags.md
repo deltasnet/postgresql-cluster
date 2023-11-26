@@ -99,8 +99,4 @@
 - - pgbackrest_ssh_keys
 - - pgbackrest_stanza_create
 - - pgbackrest_cron
-- pg_probackup
-- - pg_probackup_repo
-- - pg_probackup_install
 - cron
-- netdata

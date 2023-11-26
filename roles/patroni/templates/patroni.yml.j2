@@ -47,12 +47,6 @@ etcd3:
   {% endif %}
 {% endif %}
 
-{% if dcs_type == 'consul' %}
-consul:
-  host: 127.0.0.1:8500
-  checks: []
-{% endif %}
-
 bootstrap:
   method: {{ patroni_cluster_bootstrap_method }}
 {% if patroni_cluster_bootstrap_method == 'wal-g' %}

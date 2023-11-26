@@ -184,11 +184,6 @@
     - role: pgbackrest
       when: pgbackrest_install|bool
 
-- name: add_pgnode.yml | Import Consul playbook
-  ansible.builtin.import_playbook: consul.yml
-  when: dcs_type == "consul"
-  tags: consul
-
 - name: add_pgnode.yml | Configure new replica and additional roles
   hosts: new_replica
   become: true
@@ -225,9 +220,6 @@
     - role: vip-manager
       when: not with_haproxy_load_balancing|bool and
         (cluster_vip is defined and cluster_vip | length > 0)
-
-    - role: netdata
-      when: netdata_install is defined and netdata_install|bool
 
     # finish (info)
     - role: deploy-finish

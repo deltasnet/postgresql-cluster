@@ -31,29 +31,6 @@
       when: pgbackrest_install | default(false) | bool
       ignore_errors: true
 
-- name: remove_cluster.yml | Consul Cluster Play
-  hosts: consul_instances
-  become: true
-  vars_files:
-    - vars/main.yml
-  tasks:
-    - block:
-        - name: Stop Consul service
-          ansible.builtin.service:
-            name: consul
-            state: stopped
-            enabled: false
-        - name: Delete Consul content
-          ansible.builtin.file:
-            path: "{{ consul_data_path }}"
-            state: absent
-        - name: Delete Consul serivce
-          ansible.builtin.file:
-            path: /lib/systemd/system/consul.service
-            state: absent
-      when: remove_consul | default(false) | bool
-      ignore_errors: true
-
 - name: remove_cluster.yml | Etcd Cluster Play
   hosts: etcd_cluster
   become: true
