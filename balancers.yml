@@ -8,8 +8,6 @@
   vars_files:
     - vars/main.yml
     - vars/system.yml
-  vars:
-    vip_manager_disable: false # or 'true' for disable vip-manager service (if installed)
 
   pre_tasks:
     - name: Include OS-specific variables
