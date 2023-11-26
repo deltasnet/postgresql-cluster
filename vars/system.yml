@@ -137,9 +137,6 @@ firewall_allowed_tcp_ports_for:
     - "{{ postgresql_port }}"
     - "{{ pgbouncer_listen_port }}"
     - "{{ patroni_restapi_port }}"
-    - "19999"  # Netdata
-#    - "10050"  # Zabbix agent
-#    - ""
   etcd_cluster:
     - "{{ ansible_ssh_port | default(22) }}"
     - "2379"  # ETCD port
