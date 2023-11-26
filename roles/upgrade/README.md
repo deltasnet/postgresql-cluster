@@ -206,13 +206,6 @@ Please see the variable file vars/[upgrade.yml](../../vars/upgrade.yml)
   - Update haproxy conf file
     - Notes: Temporarily disable http-checks in order to keep database connections after stopping the Patroni service
   - Reload haproxy service
-- **Enable maintenance mode for vip-manager** (for 'Type B' scheme)
-  - Notes: if 'pgbouncer_install' is 'true' and 'pgbouncer_pool_pause' is 'true'
-  - Update vip-manager service file (comment out 'ExecStopPost')
-    - Notes: Temporarily disable vip-manager service to keep database connections after stopping the Patroni service
-  - Stop vip-manager service
-    - Notes: This prevents the VIP from being removed when the Patroni leader is unavailable during maintenance
-  - Make sure that the cluster ip address (VIP) is running
 - **Stop Patroni service**
   - Wait until the Patroni cluster is stopped
 - **Execute CHECKPOINT before stopping PostgreSQL**
@@ -277,10 +270,6 @@ Please see the variable file vars/[upgrade.yml](../../vars/upgrade.yml)
     - Notes: Enable http-checks
   - Reload haproxy service
   - Start confd service
-- **Disable maintenance mode for vip-manager** (for 'Type B' scheme)
-  - Update vip-manager service file (uncomment 'ExecStopPost')
-  - Start vip-manager service
-  - Make sure that the cluster ip address (VIP) is running
 
 #### 6. POST-UPGRADE: Perform Post-Checks and Update extensions
 - **Make sure that physical replication is active**

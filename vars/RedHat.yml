@@ -67,8 +67,6 @@ postgresql_packages:
 
 # Extra packages
 etcd_package_repo: "https://github.com/etcd-io/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
-vip_manager_package_repo:
-  "https://github.com/cybertec-postgresql/vip-manager/releases/download/v{{ vip_manager_version }}/vip-manager_{{ vip_manager_version }}_Linux_x86_64.rpm"
 
 # (if with_haproxy_load_balancing: true)
 haproxy_installation_method: "rpm"  # (default)"rpm" or "src"
@@ -145,7 +143,6 @@ patroni_rpm_package_file: "patroni-2.1.4-1.rhel8.x86_64.rpm"
 
 # additional packages
 etcd_package_file: "etcd-v3.3.27-linux-amd64.tar.gz"  # https://github.com/etcd-io/etcd/releases
-vip_manager_package_file: "vip-manager-1.0.2-1.x86_64.rpm"  # https://github.com/cybertec-postgresql/vip-manager/releases
 
 # if with_haproxy_load_balancing: true
 haproxy_package_file: []
