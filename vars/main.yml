@@ -275,7 +275,7 @@ patroni_remove_data_directory_on_diverged_timelines: false  # or 'true'
 # if 'true', Patroni will remove the PostgreSQL data directory and recreate the replica
 # if it notices that timelines are diverging and the former master can not start streaming from the new master.
 
-patroni_cluster_bootstrap_method: "initdb"  # or "wal-g", "pgbackrest", "pg_probackup"
+patroni_cluster_bootstrap_method: "pgbackrest"
 
 patroni_create_replica_methods:
   - pgbackrest
@@ -295,7 +295,6 @@ pg_probackup:
 
 pg_probackup_restore_command: ""
 pg_probackup_install: false
-wal_g_install: false
 
 # "restore_command" written to recovery.conf when configuring follower (create replica)
 postgresql_restore_command: "pgbackrest --stanza={{ pgbackrest_stanza }} archive-get %f %p"
@@ -383,8 +382,8 @@ pgbackrest_cron_jobs:
     # job: "if [ $(psql -tAXc 'select pg_is_in_recovery()') = 'f' ]; then pgbackrest --type=diff --stanza={{ pgbackrest_stanza }} backup; fi"
 
 
-# PITR mode (if patroni_cluster_bootstrap_method: "pgbackrest" or "wal-g"):
-# 1) The database cluster directory will be cleaned (for "wal-g") or overwritten (for "pgbackrest" --delta restore).
+# PITR mode (if patroni_cluster_bootstrap_method: "pgbackrest"):
+# 1) The database cluster directory will be cleaned  overwritten (for "pgbackrest" --delta restore).
 # 2) And also the patroni cluster "{{ patroni_cluster_name }}" will be removed from the DCS (if exist) before recovery.
 
 disable_archive_command: true  # or 'false' to not disable archive_command after restore

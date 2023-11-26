@@ -326,9 +326,6 @@ Please see the variable file vars/[upgrade.yml](../../vars/upgrade.yml)
   - Check pg-path option
   - Update pg-path in pgbackrest.conf
   - Upgrade stanza
-- **WAL-G** (if 'wal_g_install' is 'true')
-  - Update PostgreSQL data directory path in .walg.json
-  - Update PostgreSQL data directory path in cron jobs
 - **Check the Patroni cluster state**
 - **Check the current PostgreSQL version**
 - **Remove temporary local access rule from pg_hba.conf**

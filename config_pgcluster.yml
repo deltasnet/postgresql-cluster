@@ -149,9 +149,6 @@
     - role: postgresql-grants
       when: inventory_hostname in groups['primary']
 
-    # - role: wal-g
-    #   when: wal_g_install | bool
-
 - name: config_pgcluster | Configure pgBackRest
   hosts: pgbackrest:postgres_cluster
   become: true

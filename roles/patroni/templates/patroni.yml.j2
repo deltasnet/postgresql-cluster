@@ -49,20 +49,6 @@ etcd3:
 
 bootstrap:
   method: {{ patroni_cluster_bootstrap_method }}
-{% if patroni_cluster_bootstrap_method == 'wal-g' %}
-  wal-g:
-    command: {{ wal_g_patroni_cluster_bootstrap_command }}
-    no_params: True
-    recovery_conf:
-       recovery_target_action: promote
-       recovery_target_timeline: latest
-       restore_command: wal-g wal-fetch %f %p
-{% endif %}
-{% if patroni_cluster_bootstrap_method == 'pg_probackup' %}
-  pg_probackup:
-    command: {{ pg_probackup_patroni_cluster_bootstrap_command }}
-    no_params: true
-{% endif %}
   dcs:
     ttl: {{ patroni_ttl |d(30, true) |int }}
     loop_wait: {{ patroni_loop_wait |d(10, true) |int }}
@@ -170,12 +156,6 @@ postgresql:
   {% if 'pgbackrest' in patroni_create_replica_methods %}
   pgbackrest:
     {% for item in pgbackrest %}
-    {{ item.option }}: {{ item.value }}
-    {% endfor %}
-  {% endif %}
-  {% if 'wal_g' in patroni_create_replica_methods %}
-  wal_g:
-    {% for item in wal_g %}
     {{ item.option }}: {{ item.value }}
     {% endfor %}
   {% endif %}

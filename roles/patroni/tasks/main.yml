@@ -738,7 +738,7 @@
       become_user: postgres
   environment: "{{ proxy_env | default({}) }}"
   when: patroni_cluster_bootstrap_method != "initdb" and
-        (pgbackrest_install|bool or wal_g_install|bool)
+        (pgbackrest_install|bool )
   tags: patroni, point_in_time_recovery
 
 - block:  # PITR (custom bootstrap) - disable archive_command
@@ -774,7 +774,7 @@
         ansible_python_interpreter: /usr/bin/python3
       when: disable_archive_command|bool
   when: patroni_cluster_bootstrap_method != "initdb" and
-        (pgbackrest_install|bool or wal_g_install|bool) and
+        (pgbackrest_install|bool) and
         (existing_pgcluster is not defined or not existing_pgcluster|bool)
   become: true
   become_user: postgres
@@ -809,21 +809,6 @@
         timeout: 120
         delay: 10
       ignore_errors: false
-
-      # for WAL-G (custom bootstrap)
-    - name: Wait for PostgreSQL Recovery to complete (WAL apply)
-      become: true
-      become_user: postgres
-      ansible.builtin.command: >-
-        {{ postgresql_bin_dir }}/psql -p {{ postgresql_port }} -U {{ patroni_superuser_username }} -d postgres -tAXc
-        "select pg_is_in_recovery()"
-      register: pg_is_in_recovery
-      until: pg_is_in_recovery.stdout == "f"
-      retries: 1200  # timeout 10 hours
-      delay: 30
-      changed_when: false
-      failed_when: false
-      when: patroni_cluster_bootstrap_method == "wal-g"
 
     - name: Check PostgreSQL is started and accepting connections on Master
       become: true
@@ -939,7 +924,7 @@
         ansible_python_interpreter: /usr/bin/python3
       when: hostvars[groups['master'][0]]['postgresql_user_result'] is changed
   when: patroni_cluster_bootstrap_method != "initdb" and
-        (pgbackrest_install|bool or wal_g_install|bool) and
+        (pgbackrest_install|bool) and
         (existing_pgcluster is not defined or not existing_pgcluster|bool)
   become: true
   become_user: postgres

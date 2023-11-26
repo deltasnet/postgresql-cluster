@@ -145,7 +145,6 @@ patroni_rpm_package_file: "patroni-2.1.4-1.rhel8.x86_64.rpm"
 
 # additional packages
 etcd_package_file: "etcd-v3.3.27-linux-amd64.tar.gz"  # https://github.com/etcd-io/etcd/releases
-wal_g_package_file: "wal-g.linux-amd64.tar.gz"  # https://github.com/wal-g/wal-g/releases
 vip_manager_package_file: "vip-manager-1.0.2-1.x86_64.rpm"  # https://github.com/cybertec-postgresql/vip-manager/releases
 
 # if with_haproxy_load_balancing: true
