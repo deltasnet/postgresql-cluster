@@ -110,27 +110,27 @@ postgresql_extensions: []
 postgresql_parameters:
   - { option: "max_connections", value: "1000" }
   - { option: "max_replication_slots", value: "20" }
-  - { option: "max_stack_depth", value: "6MB" }
-  - { option: "max_worker_processes", value: "16" }
-  - { option: "max_parallel_workers", value: "12" }
+  - { option: "max_stack_depth", value: "7MB" }
+  - { option: "max_worker_processes", value: "{{ ansible_processor_cores | int }}" }
+  - { option: "max_parallel_workers", value: "{{ (ansible_processor_cores * 0.75) | int }}" }
   - { option: "password_encryption", value: "{{ postgresql_password_encryption_algorithm }}" }
   - { option: "max_locks_per_transaction", value: "128" }
   - { option: "datestyle", value: "iso, mdy" }
   - { option: "huge_pages", value: "try" }  # or "on" if you set "vm_nr_hugepages" in kernel parameters
   - { option: "shared_buffers", value: "{{ (ansible_memtotal_mb * 0.25) | int }}MB" }  # by default, 25% of RAM
   - { option: "effective_cache_size", value: "{{ (ansible_memtotal_mb * 0.75) | int }}MB" }  # by default, 75% of RAM
-  - { option: "work_mem", value: "64MB" }  # please change this value
-  - { option: "maintenance_work_mem", value: "1GB" }  # please change this value
+  - { option: "work_mem", value: "{{ ansible_memtotal_mb * 0.15 / 1000 }}MB" }  # please change this value
+  - { option: "maintenance_work_mem", value: "{{ansible_memtotal_mb * 0.05}}MB" }  # please change this value
   - { option: "checkpoint_timeout", value: "10min" }
-  - { option: "checkpoint_completion_target", value: "0.8" }
-  - { option: "min_wal_size", value: "1GB" }
-  - { option: "max_wal_size", value: "4GB" }  # or 16GB/32GB
-  - { option: "wal_buffers", value: "256MB" }
+  - { option: "checkpoint_completion_target", value: "0.7" }
+  - { option: "min_wal_size", value: "8GB" }
+  - { option: "max_wal_size", value: "16GB" }
+  - { option: "wal_buffers", value: "{{ (ansible_memtotal_mb * 0.25 * 0.03) | int }}MB" }
   - { option: "seq_page_cost", value: "1" }
   - { option: "random_page_cost", value: "1.1" }  # "1.1" for SSD storage. Also, if your databases fits in shared_buffers
   - { option: "effective_io_concurrency", value: "200" }  # "200" for SSD storage
   - { option: "autovacuum", value: "on" }  # never turn off the autovacuum!
-  - { option: "autovacuum_max_workers", value: "6" }
+  - { option: "autovacuum_max_workers", value: "5" }
   - { option: "autovacuum_analyze_scale_factor", value: "0.1" }
   - { option: "archive_mode", value: "on" }
   - { option: "archive_timeout", value: "1800s" }
