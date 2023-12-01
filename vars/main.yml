@@ -305,7 +305,7 @@ pgbackrest_install: true  # or 'true'
 pgbackrest_install_from_pgdg_repo: true  # or 'false'
 pgbackrest_stanza: "{{ patroni_cluster_name }}"  # specify your --stanza
 pgbackrest_repo_type: "posix"  # or "s3", "gcs", "azure"
-pgbackrest_repo_host: "10.0.1.29"  # dedicated repository host (optional)
+pgbackrest_repo_host: "{{ hostvars[groups['pgbackrest'][0]].ansible_default_ipv4.address }}"
 pgbackrest_repo_user: "postgres"
 pgbackrest_conf_file: "/etc/pgbackrest/pgbackrest.conf"
 # see more options https://pgbackrest.org/configuration.html
