@@ -326,7 +326,6 @@ pgbackrest_conf:
   stanza:  # [stanza_name] section
     - { option: "pg1-path", value: "{{ postgresql_data_dir }}" }
     - { option: "pg1-port", value: "{{ postgresql_port }}" }
-    - { option: "pg1-host", value: "localhost" }
     - { option: "recovery-option", value: "recovery_target_action=promote" }
     - { option: "log-level-console", value: "info" }
     - { option: "process-max", value: "4" }
