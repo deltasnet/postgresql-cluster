@@ -119,8 +119,8 @@ postgresql_parameters:
   - { option: "huge_pages", value: "try" }  # or "on" if you set "vm_nr_hugepages" in kernel parameters
   - { option: "shared_buffers", value: "{{ (ansible_memtotal_mb * 0.25) | int }}MB" }  # by default, 25% of RAM
   - { option: "effective_cache_size", value: "{{ (ansible_memtotal_mb * 0.75) | int }}MB" }  # by default, 75% of RAM
-  - { option: "work_mem", value: "{{ ansible_memtotal_mb * 0.15 / 1000 }}MB" }  # please change this value
-  - { option: "maintenance_work_mem", value: "{{ansible_memtotal_mb * 0.05}}MB" }  # please change this value
+  - { option: "work_mem", value: "{{ ( ansible_memtotal_mb * 0.20 /1000 ) | int }}MB" }  # please change this value
+  - { option: "maintenance_work_mem", value: "{{ ( ansible_memtotal_mb * 0.05 ) | int }}MB" }  # please change this value
   - { option: "checkpoint_timeout", value: "10min" }
   - { option: "checkpoint_completion_target", value: "0.7" }
   - { option: "min_wal_size", value: "8GB" }
