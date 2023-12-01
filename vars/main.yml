@@ -313,8 +313,7 @@ pgbackrest_conf:
   global:  # [global] section
     - { option: "log-level-file", value: "detail" }
     - { option: "log-path", value: "/var/log/pgbackrest" }
-#    - { option: "repo1-host", value: "{{ pgbackrest_repo_host }}" }
-#    - { option: "repo1-host-user", value: "{{ pgbackrest_repo_user }}" }
+    - { option: "repo1-host", value: "{{ pgbackrest_repo_host }}" }
     - { option: "repo1-type", value: "{{ pgbackrest_repo_type | lower }}" }
     - { option: "repo1-path", value: "/var/lib/pgbackrest" }
     - { option: "repo1-retention-full", value: "4" }
@@ -326,6 +325,8 @@ pgbackrest_conf:
 #    - { option: "", value: "" }
   stanza:  # [stanza_name] section
     - { option: "pg1-path", value: "{{ postgresql_data_dir }}" }
+    - { option: "pg1-port", value: "{{ postgresql_port }}" }
+    - { option: "pg1-host", value: "localhost" }
     - { option: "recovery-option", value: "recovery_target_action=promote" }
     - { option: "log-level-console", value: "info" }
     - { option: "process-max", value: "4" }
