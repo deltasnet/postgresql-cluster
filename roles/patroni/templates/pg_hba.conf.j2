@@ -90,9 +90,16 @@
 {% for patroni in groups['postgres_cluster'] %}
   host      all                      all                      {{ hostvars[patroni]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
+{% for patroni in groups['standby_cluster'] %}
+  host      all                      all                      {{ hostvars[patroni]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
+{% endfor %}
+# Allow replication connections from localhost, by a user with the
 # Allow replication connections from localhost, by a user with the
 # replication privilege.
   host      replication              {{ patroni_replication_username }}               localhost                trust
 {% for host in groups['postgres_cluster'] %}
+  host      replication              {{ patroni_replication_username }}               {{ hostvars[host]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
+{% endfor %}
+{% for host in groups['standby_cluster'] %}
   host      replication              {{ patroni_replication_username }}               {{ hostvars[host]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
