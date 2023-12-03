@@ -12,7 +12,6 @@
     owner: postgres
     group: postgres
     mode: "0600"
-  no_log: true
   when:
     - postgresql_pgpass is defined
     - postgresql_pgpass | length > 0

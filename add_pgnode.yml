@@ -211,6 +211,14 @@
       ansible.builtin.include_vars: "vars/{{ ansible_os_family }}.yml"
       tags: always
 
+    - name: Make sure the /pgsql directory exists
+      ansible.builtin.file:
+        dest: "{{ postgresql_home_dir }}"
+        state: directory
+        owner: postgres
+        group: postgres
+      tags: always
+
   roles:
     - role: pgbouncer
       when: pgbouncer_install|bool
