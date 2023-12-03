@@ -102,6 +102,8 @@
 {% for host in groups['postgres_cluster'] %}
   host      replication              {{ patroni_replication_username }}               {{ hostvars[host]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
+{% if groups['standby_cluster'] is defined and groups['standby_cluster'] %}
 {% for host in groups['standby_cluster'] %}
   host      replication              {{ patroni_replication_username }}               {{ hostvars[host]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
+{% endif %}
