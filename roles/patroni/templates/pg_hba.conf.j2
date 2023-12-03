@@ -90,9 +90,11 @@
 {% for patroni in groups['postgres_cluster'] %}
   host      all                      all                      {{ hostvars[patroni]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
+{% if groups['standby_cluster'] is defined and groups['standby_cluster'] %}
 {% for patroni in groups['standby_cluster'] %}
   host      all                      all                      {{ hostvars[patroni]['inventory_hostname'] }}/32         {{ postgresql_password_encryption_algorithm }}
 {% endfor %}
+{% endif %}
 # Allow replication connections from localhost, by a user with the
 # Allow replication connections from localhost, by a user with the
 # replication privilege.
