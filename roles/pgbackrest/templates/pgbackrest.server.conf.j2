@@ -4,5 +4,5 @@
 {% endfor %}
 
 # Include stanzas configuration files
-config-path = {{ pgbackrest_conf_file | dirname }}/conf.d
+include-path = {{ pgbackrest_conf_file | dirname }}/conf.d
 

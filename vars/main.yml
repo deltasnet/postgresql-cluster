@@ -14,7 +14,7 @@ vip_interface: "{{ ansible_default_ipv4.interface }}"  # interface name (e.g., "
 # - For the "Type A" scheme: Use DNS records listing all HAProxy load balancing servers instead of relying on cluster_vip.
 # - For the "Type B" scheme: Use libpq `target_session_attrs`, ensuring read/write connections go to the primary database, as an alternative to cluster_vip.
 
-patroni_cluster_name: "postgres-cluster"  # the cluster name (must be unique for each cluster)
+patroni_cluster_name: "dr-cluster"  # the cluster name (must be unique for each cluster)
 patroni_install_version: "3.1.2"  # or 'latest'
 
 patroni_superuser_username: "postgres"
@@ -242,7 +242,7 @@ patroni_callbacks: []
 # 1. the cluster name for Standby Cluster must be unique ('patroni_cluster_name' variable)
 # 2. the IP addresses (or network) of the Standby Cluster servers must be added to the pg_hba.conf of the Main Cluster ('postgresql_pg_hba' variable).
 patroni_standby_cluster:
-  host: ""  # an address of remote master
+  host: "10.0.1.4"  # an address of remote master
   port: "5400"  # a port of remote master
 #  primary_slot_name: ""  # which slot on the remote master to use for replication (optional)
 #  restore_command: ""  # command to restore WAL records from the remote master to standby leader (optional)
