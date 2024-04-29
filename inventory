@@ -1,26 +1,22 @@
 [etcd_cluster]  # recommendation: 3, or 5-7 nodes
-10.0.1.70
-10.0.1.253 
-10.0.1.27
+172.21.0.3
+172.21.0.5 
+172.21.0.10
 
 # if with_haproxy_load_balancing: true
 [balancers]
-10.0.1.93
-10.0.1.97  
- 
+172.21.0.2
+172.21.0.6  
 
 # PostgreSQL nodes
 [master]
-10.0.1.17 hostname=pgnode01 postgresql_exists=false
+172.21.0.15 hostname=pgnode01 postgresql_exists=false
 
 [replica]
-10.0.1.118 hostname=pgnode03 postgresql_exists=false
-10.0.1.131 hostname=pgnode02 postgresql_exists=false
+172.21.0.7 hostname=pgnode03 postgresql_exists=false
+172.21.0.14 hostname=pgnode02 postgresql_exists=false
 
 [standby_cluster]
-10.0.2.116
-10.0.2.89
-10.0.2.245
 
 [postgres_cluster:children]
 master
@@ -28,16 +24,12 @@ replica
 
 # if pgbackrest_install: true and "repo_host" is set
 [pgbackrest]  # optional (Dedicated Repository Host)
-10.0.1.131
 
 # Connection settings
 [all:vars]
 ansible_connection='ssh'
 ansible_ssh_port='22'
-ansible_user='ec2-user'
-#ansible_ssh_private_key_file=
-#ansible_python_interpreter='/usr/bin/python3'  # is required for use python3
+ansible_user='root'
 
 [pgbackrest:vars]
-ansible_user='ec2-user'
 

@@ -1,0 +1,149 @@
+services:
+  ansible:
+    image: ansible:8.7.0
+    container_name: ansible
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/ansible
+    working_dir: /ansible
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  pgsql-11:
+    image: almalinux:8.9
+    container_name: pgsql-11
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups:/backups
+  pgsql-12:
+    image: almalinux:8.9
+    container_name: pgsql-12
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups:/backups
+  pgsql-13:
+    image: almalinux:8.9
+    container_name: pgsql-13
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups:/backups
+  etcd-11:
+    image: almalinux:8.9
+    container_name: etcd-11
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  etcd-12:
+    image: almalinux:8.9
+    container_name: etcd-12
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  etcd-13:
+    image: almalinux:8.9
+    container_name: etcd-13
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  haproxy-11:
+    image: almalinux:8.9
+    container_name: haproxy-11
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  haproxy-12:
+    image: almalinux:8.9
+    container_name: haproxy-12
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  pgsql-21:
+    image: almalinux:8.9
+    container_name: pgsql-21
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups-dr:/backups
+  pgsql-22:
+    image: almalinux:8.9
+    container_name: pgsql-22
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups-dr:/backups
+  pgsql-23:
+    image: almalinux:8.9
+    container_name: pgsql-23
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+    volumes:
+      - backups-dr:/backups
+  etcd-21:
+    image: almalinux:8.9
+    container_name: etcd-21
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  etcd-22:
+    image: almalinux:8.9
+    container_name: etcd-22
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  etcd-23:
+    image: almalinux:8.9
+    container_name: etcd-23
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  haproxy-21:
+    image: almalinux:8.9
+    container_name: haproxy-21
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+  haproxy-22:
+    image: almalinux:8.9
+    container_name: haproxy-22
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+
+volumes:
+  backups:
+  backups-dr:
